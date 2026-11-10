@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { SvgDefs, ExternalLinkIcon, DownloadIcon } from './components/icons.jsx'
+import BootScreen from './components/BootScreen.jsx'
 import Wallpaper from './components/Wallpaper.jsx'
 import MenuBar from './components/MenuBar.jsx'
 import Desktop from './components/Desktop.jsx'
@@ -11,6 +12,22 @@ import AboutContent from './components/AboutContent.jsx'
 import ContactContent from './components/ContactContent.jsx'
 
 export default function App() {
+  const [booting, setBooting] = useState(true)
+  const [wallpaperReady, setWallpaperReady] = useState(false)
+  const [loadProgress, setLoadProgress] = useState(0)
+
+  const handleWallpaperProgress = useCallback((pct) => {
+    setLoadProgress(pct)
+  }, [])
+
+  const handleWallpaperReady = useCallback(() => {
+    setWallpaperReady(true)
+    setLoadProgress(100)
+  }, [])
+
+  const handleBootFinished = useCallback(() => {
+    setBooting(false)
+  }, [])
   const [openWindows, setOpenWindows] = useState({
     projects: false,
     blog: false,
@@ -56,7 +73,13 @@ export default function App() {
   return (
     <div className="portfolio-app">
       <SvgDefs />
-      <Wallpaper />
+
+      {/* Apple Boot Screen */}
+      {booting && (
+        <BootScreen progress={loadProgress} onFinished={handleBootFinished} />
+      )}
+
+      <Wallpaper onProgress={handleWallpaperProgress} onReady={handleWallpaperReady} />
       <MenuBar onOpen={openWindow} />
       <Desktop onOpen={openWindow} />
 

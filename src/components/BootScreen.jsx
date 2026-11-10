@@ -1,7 +1,17 @@
 import { useState, useEffect } from "react";
 
+const MAX_BOOT_DURATION = 5000;
+const FADE_DURATION = 350;
+
 export default function BootScreen({ progress, onFinished }) {
   const [phase, setPhase] = useState("boot"); // 'boot' | 'fadeout'
+
+  // Always hand control to the portfolio within five seconds, even if the
+  // wallpaper video is slow or fails to load.
+  useEffect(() => {
+    const t = setTimeout(() => setPhase("fadeout"), MAX_BOOT_DURATION - FADE_DURATION);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     if (progress >= 100) {

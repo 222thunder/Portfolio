@@ -45,7 +45,7 @@ public/
 
 ## Screenshot
 
-[screenshot](screenshots/screenshot-1.png)
+![Portfolio screenshot](screenshots/screenshot-1.png)
 
 ## License
 
